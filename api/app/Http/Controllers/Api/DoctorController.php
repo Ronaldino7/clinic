@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
 use App\Helpers\ApiResponse;
+use App\Http\Resources\DoctorResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,17 +17,16 @@ class DoctorController extends Controller
         if ($doctors->isEmpty()) {
             return ApiResponse::error("No doctors found", 404);
         }
-        return ApiResponse::success("Doctors retrieved successfully", $doctors, 200);
+        return ApiResponse::success("Doctors retrieved successfully", new DoctorResource($doctors), 200);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'specialization' => 'required|string|max:255',
+            'specialization' => 'nullable|string|max:255',
             'phone' => 'required|integer|min:9|unique:doctors,phone',
-            'email' => 'required|email|unique:doctors,email',
-            'password' => 'required|string|min:6'
+            'email' => 'required|email|unique:doctors,email'
         ]);
 
         if ($validator->fails()) {
@@ -38,6 +38,11 @@ class DoctorController extends Controller
 
         if (!$doctor) {
             return ApiResponse::error("Failed to create doctor", 500);
+        }
+
+        if ($request->specialization === NULL) {
+            $doctor->specialization = "Dokter Umum";
+            $doctor->save();
         }
 
         return ApiResponse::success("Doctor created successfully", $doctor, 201);
@@ -57,8 +62,7 @@ class DoctorController extends Controller
             'name' => 'string|max:255',
             'specialization' => 'string|max:255',
             'phone' => 'integer|min:9|unique:doctors,phone',
-            'email' => 'email|unique:doctors,email',
-            'password' => 'string|min:6'
+            'email' => 'email|unique:doctors,email'
         ]);
 
         if ($validator->fails()) {

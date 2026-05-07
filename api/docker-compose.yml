@@ -13,11 +13,14 @@ services:
   db:
     image: mysql:8.0
     container_name: clinic_db
+    restart: always
     environment:
       MYSQL_DATABASE: clinic
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
 
   phpmyadmin:
     image: phpmyadmin
@@ -37,3 +40,6 @@ services:
       - ./nginx:/etc/nginx/conf.d
     depends_on:
       - app
+      
+volumes:
+  db_data:

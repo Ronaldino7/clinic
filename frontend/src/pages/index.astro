@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/layouts.astro";
-import FetchDataDoctors from "../components/doctorPanel.astro";
+import Counting from "../components/counting.astro";
 const title = "Klinik Sehat | Beranda";
 ---
 
@@ -111,7 +111,7 @@ const title = "Klinik Sehat | Beranda";
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
 						<p class="text-muted small mb-1">Total Dokter</p>
-						<FetchDataDoctors show="count"/>
+						<Counting />
 					</div>
 					<div class="bg-primary p-2 rounded-2 text-white">
 						<i class="bi bi-person fs-4"></i>

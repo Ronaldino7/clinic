@@ -15,9 +15,10 @@ return new class extends Migration
         Schema::create('doctors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('specialization');
-            $table->integer('phone')->unique();
+            $table->string('specialization')->nullable();
+            $table->bigInteger('phone')->unique();
             $table->string('email')->unique();
+            $table->string('status')->default('active');
             $table->timestamps();
         });
 

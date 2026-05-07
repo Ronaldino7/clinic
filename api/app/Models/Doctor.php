@@ -12,19 +12,17 @@ class Doctor extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     
     protected $fillable = [
+        'id',
         'name',
         'specialization',
         'phone',
         'email',
-        'password',
         'status'
     ];
 
     protected $hidden = [
         'created_at',
         'updated_at',
-        'password',
-        'remember_token',
     ];
 
     public function schedules()

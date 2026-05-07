@@ -1,0 +1,7 @@
+---
+import api from "../services/api";
+const endpoint = await fetch(api.defaults.baseURL + "/api/doctors");
+const data = await endpoint.json();
+---
+
+<p class="h2 fw-bold text-dark mb-0">{data.data.length}</p>

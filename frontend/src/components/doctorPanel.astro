@@ -2,20 +2,81 @@
 import api from "../services/api";
 
 const { doctor, show = "count" } = Astro.props;
-let data = [];
 
-if (show === "count" || !doctor) {
+type Doctor = {
+    id: number;
+    name: string;
+    specialization: string;
+};
+
+let data = [];
+let doctors: Doctor[] = [];
+
+if (!doctor) {
     try {
         const endpoint = await fetch(`${api.defaults.baseURL}/api/doctors`);
         data = await endpoint.json();
+        doctors = data.data || [];
     } catch {
         data = [];
+        doctors = [];
     }
 }
 
 const selectedDoctor = doctor || data[0];
 ---
-
-{show === "count" && <p class="h2 fw-bold text-dark mb-0">{data.length}</p>}
-{show === "name" && <h4 class="fw-bold mb-1">{selectedDoctor?.name || "Dokter"}</h4>}
+{show === "name" && <h4 class="fw-bold mb-1">Dr. {selectedDoctor?.name || "Dokter"}</h4>}
 {show === "specialty" && <p class="text-primary mb-0">Spesialis {selectedDoctor?.specialization || "Spesialis"}</p>}
+
+<div class="row g-4">
+            {
+                Array.isArray(doctors) ? (
+                    doctors.map((doctor) => (
+                        <div class="col-md-6">
+                            <div class="card p-4 h-100 shadow-sm">
+                                <div class="mb-0">
+                                    <h4 class="fw-bold mb-1">Dr. {doctor.name}</h4>
+                                    <p class="text-primary mb-0">Spesialis {doctor.specialization}</p>
+                                </div>
+
+                                <hr class="text-light-emphasis" />
+
+                                <div class="mb-4">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i
+                                            class="bi bi-calendar3 me-3 text-secondary"
+                                        ></i>
+                                        <div>
+                                            <span class="d-block fw-bold">
+                                                Senin - Rabu
+                                            </span>
+                                            <small class="text-muted">
+                                                08:00 - 12:00
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-geo-alt me-3 text-secondary"
+                                        ></i>
+                                        <span>Ruang 101</span>
+                                    </div>
+                                </div>
+                                <a
+                                    href="signup.html"
+                                    class="text-white text-decoration-none"
+                                >
+                                    <button
+                                        class="btn btn-primary w-100 mt-auto fw-bold"
+                                    >
+                                        Buat Janji Temu
+                                    </button>
+                                </a>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p class="text-muted text-center">Belum ada data dokter tersedia.</p>
+                )
+            }
+        </div>
+    </div>
